@@ -41,7 +41,7 @@ class EbnfParser < Parslet::Parser
   rule(:char_class)      { str('[') >> str('^').maybe >> ( char | char_code | char_range | char_code_range ).repeat(1) >> str(']') }
   rule(:char)            { match['\x9\xA\xD'] | match['\x20-\xD7FF'] | match['\xE000-\xFFFD'] | match['\x10000-\x10FFFF'] }
   rule(:char_range)      { char >> str('-') >> char } # TODO: "excluding ']' from second char"
-  rule(:char_code_range) { char_code '-' CharCode }
+  rule(:char_code_range) { char_code >> str('-') >> CharCode }
   rule(:link)            { str('[') >> url >> str(']') }
   rule(:url)             { match['^\x5D:/?#'] >> str('://') >> match['^\x5D#'].repeat(1) >> ( str('#') >> name ).maybe }
   rule(:whitespace)      { space | comment }
