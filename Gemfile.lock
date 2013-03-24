@@ -4,9 +4,11 @@ GEM
     blankslate (2.1.2.4)
     parslet (1.5.0)
       blankslate (~> 2.0)
+    rake (0.9.6)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   parslet
+  rake
