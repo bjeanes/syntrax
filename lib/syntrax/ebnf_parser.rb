@@ -30,7 +30,7 @@ class EbnfParser < Parslet::Parser
   root(:grammar)
 
   rule(:grammar)         { form.repeat }
-  rule(:form)            { name >> '::=' >> choice }
+  rule(:form)            { name >> '::=' >> ( choice | link ) }
   rule(:name)            { match['A-Z'] >> match['a-zA-Z'].repeat }
   rule(:choice)          { seq_or_diff >> ( str('|') >> seq_or_diff ).repeat }
   rule(:seq_or_diff)     { ( item >> ( str('-') >> item | item.repeat ).maybe ) }
@@ -42,6 +42,8 @@ class EbnfParser < Parslet::Parser
   rule(:char)            { match['\x9\xA\xD'] | match['\x20-\xD7FF'] | match['\xE000-\xFFFD'] | match['\x10000-\x10FFFF'] }
   rule(:char_range)      { char >> str('-') >> char } # TODO: "excluding ']' from second char"
   rule(:char_code_range) { char_code '-' CharCode }
+  rule(:link)            { str('[') >> url >> str(']') }
+  rule(:url)             { match['^\x5D:/?#'] >> str('://') >> match['^\x5D#'].repeat(1) >> ( str('#') >> name ).maybe }
   rule(:whitespace)      { space | comment }
   rule(:space)           { match['\x9\xA\xD\x20'] }
   rule(:comment)         { str('/*') >> ( match['^*'] | ( str('*') >> match['^*/'] ) ).repeat >> '*'.repeat >> '*/' }
