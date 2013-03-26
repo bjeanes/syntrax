@@ -30,7 +30,7 @@ class EbnfParser < Parslet::Parser
   root(:grammar)
 
   rule(:grammar)         { form.repeat }
-  rule(:form)            { name >> '::=' >> ( choice | link ) }
+  rule(:form)            { name >> str('::=') >> ( choice | link ) }
   rule(:name)            { match['A-Z'] >> match['a-zA-Z'].repeat }
   rule(:choice)          { seq_or_diff >> ( str('|') >> seq_or_diff ).repeat }
   rule(:seq_or_diff)     { ( item >> ( str('-') >> item | item.repeat ).maybe ) }
