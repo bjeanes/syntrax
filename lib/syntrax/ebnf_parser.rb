@@ -1,7 +1,7 @@
 require 'parslet'
 
 =begin
-An self-describing example grammar of the W3C-style EBNF syntax;
+A self-describing example grammar of the W3C-style EBNF syntax;
 
   Grammar              ::=  Production*
   Production           ::=  NCName '::=' ( Choice | Link )
@@ -29,13 +29,17 @@ An self-describing example grammar of the W3C-style EBNF syntax;
 class EbnfParser < Parslet::Parser
   root(:grammar)
 
-  rule(:grammar)         { form.repeat }
-  rule(:form)            { name >> str('::=') >> ( choice | link ) }
+  def padded
+    whitespace.repeat(0) >> yield >> whitespace.repeat(0)
+  end
+
+  rule(:grammar)         { padded { production.as(:production) }.repeat }
+  rule(:production)      { name.as(:rule) >> padded { str('::=') } >> ( choice.as(:or) | link ).as(:definition) }
   rule(:name)            { match['A-Z'] >> match['a-zA-Z'].repeat }
-  rule(:choice)          { seq_or_diff >> ( str('|') >> seq_or_diff ).repeat }
-  rule(:seq_or_diff)     { ( item >> ( str('-') >> item | item.repeat ).maybe ) }
+  rule(:choice)          { seq_or_diff.as(:option) >> ( padded { str('|') } >> seq_or_diff.as(:option) ).repeat }
+  rule(:seq_or_diff)     { ( item >> ( padded { str('-') } >> item | item.repeat ).maybe ) }
   rule(:item)            { primary >> match['+*?'].maybe }
-  rule(:primary)         { name | string_literal | char_code | char_class | ( str('(') >> choice >> str(')') ) }
+  rule(:primary)         { name | string_literal | char_code | char_class | ( str('(') >> padded { choice } >> str(')') ) }
   rule(:string_literal)  { ( str('"') >> match['^"'].repeat(1) >> str('"') ) | ( str("'") >> match["^'"].repeat(1) >> str("'") )}
   rule(:char_code)       { str('#x') >> match['0-9a-fA-F'].repeat(1) }
   rule(:char_class)      { str('[') >> str('^').maybe >> ( char | char_code | char_range | char_code_range ).repeat(1) >> str(']') }
@@ -46,5 +50,5 @@ class EbnfParser < Parslet::Parser
   rule(:url)             { match['^\x5D:/?#'] >> str('://') >> match['^\x5D#'].repeat(1) >> ( str('#') >> name ).maybe }
   rule(:whitespace)      { space | comment }
   rule(:space)           { match['\x9\xA\xD\x20'] }
-  rule(:comment)         { str('/*') >> ( match['^*'] | ( str('*') >> match['^*/'] ) ).repeat >> '*'.repeat >> '*/' }
+  rule(:comment)         { str('/*') >> ( match['^*'] | ( str('*') >> match['^*/'] ) ).repeat >> str('*').repeat(1) >> str('/') }
 end
