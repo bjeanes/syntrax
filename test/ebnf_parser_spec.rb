@@ -32,6 +32,7 @@ describe EbnfParser do
     }
   end
 
+  # Comment ::= '/*' ( [^*] | '*'+ [^*/] )* '*'* '*/'
   describe "comments" do
     subject { parser.comment }
 
@@ -44,6 +45,8 @@ describe EbnfParser do
     specify { subject.must_not_parse "// I'm a comment!"}
   end
 
+  # Whitespace ::= S | Comment
+  # S          ::= #x9 | #xA | #xD | #x20
   describe "whitespace" do
     subject { parser.whitespace.repeat(1) }
 
