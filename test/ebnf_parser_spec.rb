@@ -35,13 +35,13 @@ describe EbnfParser do
   describe "comments" do
     subject { parser.comment }
 
-    it { subject.must_parse "/**/"}
-    it { subject.must_parse "/* */"}
-    it { subject.must_parse "/***/"}
-    it { subject.must_parse "/*****/"}
-    it { subject.must_parse "/*** I'm a comment ****/"}
-    it { subject.must_not_parse "/*/"}
-    it { subject.must_not_parse "// I'm a comment!"}
+    specify { subject.must_parse "/**/"}
+    specify { subject.must_parse "/* */"}
+    specify { subject.must_parse "/***/"}
+    specify { subject.must_parse "/*****/"}
+    specify { subject.must_parse "/*** I'm a comment ****/"}
+    specify { subject.must_not_parse "/*/"}
+    specify { subject.must_not_parse "// I'm a comment!"}
   end
 
   it "parses a simple rule" do
