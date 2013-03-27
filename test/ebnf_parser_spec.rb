@@ -44,6 +44,18 @@ describe EbnfParser do
     specify { subject.must_not_parse "// I'm a comment!"}
   end
 
+  describe "whitespace" do
+    subject { parser.whitespace.repeat(1) }
+
+    specify { subject.must_parse " " }
+    specify { subject.must_parse "\t" }
+    specify { subject.must_parse "\r" }
+    specify { subject.must_parse "\n" }
+    specify { subject.must_parse "/* comment is whitespace too */"}
+    specify { subject.must_parse "    \r\n  \t \n\r\t\t" }
+    specify { subject.must_parse "    \r\n  \t /*comment*/\n\r\t\t" }
+  end
+
   it "parses a simple rule" do
     parser.must_parse "Grammar ::= Production*"
   end
