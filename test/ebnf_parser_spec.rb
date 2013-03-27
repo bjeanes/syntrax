@@ -40,6 +40,17 @@ describe EbnfParser do
     it { parser.must_parse "Link ::= '[' URL ']'" }
   end
 
+  # Choice ::= SequenceOrDifference ( '|' SequenceOrDifference )*
+  describe "choice" do
+    subject { parser.choice }
+
+    specify { subject.must_parse "X"}
+    specify { subject.must_parse "X|Y"}
+    specify { subject.must_parse "X | Y | Z"}
+    specify { subject.must_parse "X | (Y) | Z"}
+    specify { subject.must_parse "X       |    (Y | Q)+   |   Z"}
+  end
+
   # Comment ::= '/*' ( [^*] | '*'+ [^*/] )* '*'* '*/'
   describe "comments" do
     subject { parser.comment }
