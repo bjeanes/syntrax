@@ -1,4 +1,6 @@
-require 'minitest/spec'
+require 'bundler'
+Bundler.setup(:default, :test)
+
 require 'minitest/autorun'
 
 require_relative "support/parser_matchers"
