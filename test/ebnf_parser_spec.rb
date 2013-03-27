@@ -51,6 +51,14 @@ describe EbnfParser do
     specify { subject.must_parse "X       |    (Y | Q)+   |   Z"}
   end
 
+  describe "sequence" do
+    subject { parser.seq_or_diff }
+
+    specify { subject.must_parse "X" }
+    specify { subject.must_parse "X Y" }
+    specify { subject.must_parse "X Y Z" }
+  end
+
   # Comment ::= '/*' ( [^*] | '*'+ [^*/] )* '*'* '*/'
   describe "comments" do
     subject { parser.comment }

@@ -37,12 +37,11 @@ class EbnfParser < Parslet::Parser
     ((any >> atom.absent?).repeat >> any).maybe
   end
 
-
-  rule(:grammar)         { production.as(:production).repeat }
+  rule(:grammar)         { production.as(:production) >> (new_line.repeat >> production.as(:production)).repeat(0) }
   rule(:production)      { padded { name.as(:rule) >> padded { str('::=') } >> ( choice.as(:or) | link ).as(:definition) } }
   rule(:name)            { match['A-Z'] >> match['a-zA-Z'].repeat }
   rule(:choice)          { seq_or_diff.as(:option) >> ( padded { str('|') } >> seq_or_diff.as(:option) ).repeat }
-  rule(:seq_or_diff)     { ( item >> ( padded { str('-') } >> item | item.repeat ).maybe ) }
+  rule(:seq_or_diff)     { ( item >> ( (padded { str('-') } >> item) | ( space.repeat(1) >> item ).repeat ).maybe ) }
   rule(:item)            { primary >> match['+*?'].maybe }
   rule(:primary)         { name | string_literal | char_code | char_class | ( str('(') >> padded { choice } >> str(')') ) }
   rule(:string_literal)  { ( str('"') >> match['^"'].repeat(1) >> str('"') ) | ( str("'") >> match["^'"].repeat(1) >> str("'") )}
@@ -53,7 +52,8 @@ class EbnfParser < Parslet::Parser
   rule(:char_code_range) { char_code >> str('-') >> CharCode }
   rule(:link)            { str('[') >> url >> str(']') }
   rule(:url)             { match['^\x5D:/?#'] >> str('://') >> match['^\x5D#'].repeat(1) >> ( str('#') >> name ).maybe }
-  rule(:whitespace)      { space | comment }
-  rule(:space)           { match['\x9\xA\xD\x20'] }
+  rule(:whitespace)      { space | new_line | comment }
+  rule(:new_line)        { match['\r\n'] }
+  rule(:space)           { match['\t '] }
   rule(:comment)         { str('/*') >> any_up_until(str('*/')) >> str('*/') }
 end
