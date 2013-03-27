@@ -32,11 +32,11 @@ describe EbnfParser do
     }
   end
 
-  it "parses a single rule" do
+  it "parses a simple rule" do
     parser.must_parse "Grammar ::= Production*"
   end
 
-  it "parses a few rules" do
+  it "parses rules with choices" do
     parser.must_parse \
       "Whitespace ::= S | Comment\n" +
       "S          ::= #x9 | #xA | #xD | #x20"
