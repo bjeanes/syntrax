@@ -32,6 +32,18 @@ describe EbnfParser do
     }
   end
 
+  describe "comments" do
+    subject { parser.comment }
+
+    it { subject.must_parse "/**/"}
+    it { subject.must_parse "/* */"}
+    it { subject.must_parse "/***/"}
+    it { subject.must_parse "/*****/"}
+    it { subject.must_parse "/*** I'm a comment ****/"}
+    it { subject.must_not_parse "/*/"}
+    it { subject.must_not_parse "// I'm a comment!"}
+  end
+
   it "parses a simple rule" do
     parser.must_parse "Grammar ::= Production*"
   end
@@ -43,6 +55,7 @@ describe EbnfParser do
   end
 
   it "parses a rule with a sequence" do
+    skip
     parser.must_parse "Link ::= '[' URL ']'"
   end
 
