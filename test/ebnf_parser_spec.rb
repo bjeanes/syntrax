@@ -42,6 +42,10 @@ describe EbnfParser do
       "S          ::= #x9 | #xA | #xD | #x20"
   end
 
+  it "parses a rule with a sequence" do
+    parser.must_parse "Link ::= '[' URL ']'"
+  end
+
   it "parses its own grammar" do
     skip
     parser.must_parse grammar
