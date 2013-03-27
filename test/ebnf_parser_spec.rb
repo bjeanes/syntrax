@@ -32,6 +32,14 @@ describe EbnfParser do
     }
   end
 
+  # FIXME
+  describe "broken" do
+    before { skip }
+
+    it { parser.must_parse grammar }
+    it { parser.must_parse "Link ::= '[' URL ']'" }
+  end
+
   # Comment ::= '/*' ( [^*] | '*'+ [^*/] )* '*'* '*/'
   describe "comments" do
     subject { parser.comment }
@@ -67,15 +75,5 @@ describe EbnfParser do
     parser.must_parse \
       "Whitespace ::= S | Comment\n" +
       "S          ::= #x9 | #xA | #xD | #x20"
-  end
-
-  it "parses a rule with a sequence" do
-    skip
-    parser.must_parse "Link ::= '[' URL ']'"
-  end
-
-  it "parses its own grammar" do
-    skip
-    parser.must_parse grammar
   end
 end
