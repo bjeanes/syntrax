@@ -36,8 +36,8 @@ describe EbnfParser do
   describe "broken" do
     before { skip }
 
-    it { parser.must_parse grammar }
-    it { parser.must_parse "Link ::= '[' URL ']'" }
+    specify { parser.must_parse grammar }
+    specify { parser.must_parse "Link ::= '[' URL ']'" }
   end
 
   # Choice ::= SequenceOrDifference ( '|' SequenceOrDifference )*
