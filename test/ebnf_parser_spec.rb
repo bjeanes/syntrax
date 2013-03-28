@@ -53,6 +53,7 @@ describe EbnfParser do
     specify { subject.must_parse "X       |    (Y | Q)+   |   Z"}
   end
 
+  # SequenceOrDifference ::= (Item ( '-' Item | Item* ))?
   describe "sequence" do
     subject { parser.seq_or_diff }
 
