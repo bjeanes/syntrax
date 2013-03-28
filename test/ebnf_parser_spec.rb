@@ -15,7 +15,7 @@ describe EbnfParser do
 
       Grammar              ::= Production*
       Production           ::= NCName '::=' ( Choice | Link )
-      NCName               ::= [http://www.w3.org/TR/xml-names/#NT-NCName]
+      NCName               ::= [http://www.w3.org/TR/xml-names/#NT-NCName] /* this URL violates this spec */
       Choice               ::= SequenceOrDifference ( '|' SequenceOrDifference )*
       SequenceOrDifference ::= (Item ( '-' Item | Item* ))?
       Item                 ::= Primary ( '?' | '*' | '+' )?
@@ -124,4 +124,13 @@ describe EbnfParser do
     specify { subject.must_parse "    \r\n  \t /*comment*/\n\r\t\t" }
   end
 
+  # URL ::= [^#x5D:/?#]+ '://' [^#x5D#]+ ('#' NCName)?
+  describe "url" do
+    subject { parser.url }
+
+    specify { subject.must_parse "https://google.com" }
+    specify { subject.must_parse "http://www.w3.org/TR/xml-names/#NCName" }
+    specify { subject.must_not_parse "http://" }
+    specify { subject.must_not_parse "example.com" }
+  end
 end
