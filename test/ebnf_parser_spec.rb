@@ -50,6 +50,18 @@ describe EbnfParser do
     specify { subject.must_parse "S       ::= #x9 | #xA | #xD | #x20" }
   end
 
+  # NCName ::= [http://www.w3.org/TR/xml-names/#NT-NCName]
+  describe "name" do
+    subject { parser.name }
+
+    specify { subject.must_parse "A" }
+    specify { subject.must_parse "AB" }
+    specify { subject.must_parse "Ab" }
+    specify { subject.must_parse "AbC" }
+    specify { subject.must_not_parse "abC" }
+    specify { subject.must_not_parse "A B" }
+  end
+
   # Choice ::= SequenceOrDifference ( '|' SequenceOrDifference )*
   describe "choice" do
     subject { parser.choice }
