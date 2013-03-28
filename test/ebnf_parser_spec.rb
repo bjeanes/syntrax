@@ -39,7 +39,15 @@ describe EbnfParser do
     before { skip }
 
     specify { parser.must_parse grammar }
-    specify { parser.must_parse "Link ::= '[' URL ']'" }
+  end
+
+  # Production ::= NCName '::=' ( Choice | Link )
+  describe "production" do
+    subject { parser.production }
+
+    specify { subject.must_parse "Link    ::= '[' URL ']'" }
+    specify { subject.must_parse "Grammar ::= Production*" }
+    specify { subject.must_parse "S       ::= #x9 | #xA | #xD | #x20" }
   end
 
   # Choice ::= SequenceOrDifference ( '|' SequenceOrDifference )*
@@ -89,13 +97,4 @@ describe EbnfParser do
     specify { subject.must_parse "    \r\n  \t /*comment*/\n\r\t\t" }
   end
 
-  it "parses a simple rule" do
-    parser.must_parse "Grammar ::= Production*"
-  end
-
-  it "parses rules with choices" do
-    parser.must_parse \
-      "Whitespace ::= S | Comment\n" +
-      "S          ::= #x9 | #xA | #xD | #x20"
-  end
 end
