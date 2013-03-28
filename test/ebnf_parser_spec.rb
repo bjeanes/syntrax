@@ -86,6 +86,17 @@ describe EbnfParser do
     specify { subject.must_parse "X  Y   Z" }
   end
 
+  describe "string_literal" do
+    subject { parser.string_literal }
+
+    specify { subject.must_parse "''" }
+    specify { subject.must_parse '""' }
+    specify { subject.must_parse "'abc'" }
+    specify { subject.must_parse '"abc"' }
+    specify { subject.must_not_parse '"""' }
+    specify { subject.must_not_parse "'''" }
+  end
+
   # Comment ::= '/*' ( [^*] | '*'+ [^*/] )* '*'* '*/'
   describe "comments" do
     subject { parser.comment }
