@@ -41,6 +41,10 @@ describe EbnfParser do
     specify { parser.must_parse grammar }
   end
 
+  describe "misc non-trivial rules" do
+    specify { parser.must_parse "X ::= Y ((R | S)+ T)" }
+  end
+
   # Production ::= NCName '::=' ( Choice | Link )
   describe "production" do
     subject { parser.production }
