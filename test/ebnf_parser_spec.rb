@@ -124,6 +124,14 @@ describe EbnfParser do
     specify { subject.must_parse "    \r\n  \t /*comment*/\n\r\t\t" }
   end
 
+  # Link ::= '[' URL ']'
+  describe "link" do
+    subject { parser.link }
+
+    specify { subject.must_parse "[https://google.com]" }
+    specify { subject.must_not_parse "[0-9A-Za-z]" }
+  end
+
   # URL ::= [^#x5D:/?#]+ '://' [^#x5D#]+ ('#' NCName)?
   describe "url" do
     subject { parser.url }
