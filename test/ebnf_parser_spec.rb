@@ -86,6 +86,15 @@ describe EbnfParser do
     specify { subject.must_parse "X  Y   Z" }
   end
 
+  # SequenceOrDifference ::= (Item ( '-' Item | Item* ))?
+  describe "difference" do; end
+
+  # Item ::= Primary ( '?' | '*' | '+' )?
+  describe "item" do; end
+
+  # Primary ::= NCName | StringLiteral | CharCode | CharClass | '(' Choice ')'
+  describe "primary" do; end
+
   describe "string_literal" do
     subject { parser.string_literal }
 
@@ -96,6 +105,21 @@ describe EbnfParser do
     specify { subject.must_not_parse '"""' }
     specify { subject.must_not_parse "'''" }
   end
+
+  # CharCode ::= '#x' [0-9a-fA-F]+
+  describe "char_code" do; end
+
+  # CharClass ::= '[' '^'? ( Char | CharCode | CharRange | CharCodeRange )+ ']'
+  describe "char_class" do; end
+
+  # Char ::= [http://www.w3.org/TR/xml#NT-Char]
+  describe "char" do; end
+
+  # CharRange ::= Char '-' ( Char - ']' )
+  describe "char_range" do; end
+
+  # CharCodeRange ::= CharCode '-' CharCode
+  describe "char_code_range" do; end
 
   # Comment ::= '/*' ( [^*] | '*'+ [^*/] )* '*'* '*/'
   describe "comments" do
