@@ -107,13 +107,24 @@ describe EbnfParser do
   end
 
   # CharCode ::= '#x' [0-9a-fA-F]+
-  describe "char_code" do; end
+  describe "char_code" do
+    subject { parser.char_code }
+
+    specify { subject.must_parse "#x40" } # @
+    specify { subject.must_not_parse "7" }
+  end
 
   # CharClass ::= '[' '^'? ( Char | CharCode | CharRange | CharCodeRange )+ ']'
   describe "char_class" do; end
 
   # Char ::= [http://www.w3.org/TR/xml#NT-Char]
-  describe "char" do; end
+  describe "char" do
+    subject { parser.char }
+
+    specify { subject.must_parse "x" }
+    specify { subject.must_not_parse "xx" }
+    specify { subject.must_not_parse "\x19" }
+  end
 
   # CharRange ::= Char '-' ( Char - ']' )
   describe "char_range" do; end
