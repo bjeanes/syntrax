@@ -117,7 +117,7 @@ describe EbnfParser do
     specify { subject.must_not_parse "Abc|Def" }
     specify { subject.must_parse '"Hi there"' }
     specify { subject.must_parse '#x30' }
-    specify { skip; subject.must_parse '[x]' }
+    specify { subject.must_parse '[x]' }
     specify { subject.must_parse "(X)" }
     specify { subject.must_parse "(X|Y)" }
     specify { subject.must_parse "( X | Y )" }
@@ -143,7 +143,15 @@ describe EbnfParser do
   end
 
   # CharClass ::= '[' '^'? ( Char | CharCode | CharRange | CharCodeRange )+ ']'
-  describe "char_class" do; end
+  describe "char_class" do
+    subject { parser.char_class }
+
+    specify { subject.must_parse "[x]" }
+    specify { subject.must_parse "[xyz]" }
+    specify { subject.must_parse '[0-9A-Za-z@#$#x20-#x39]' }
+    specify { subject.must_parse "[^x]" }
+    specify { subject.must_parse "[^xyz]" }
+  end
 
   # Char ::= [http://www.w3.org/TR/xml#NT-Char]
   describe "char" do

@@ -46,7 +46,7 @@ class EbnfParser < Parslet::Parser
   rule(:primary)         { name | string_literal | char_code | char_class | ( str('(') >> padded { choice } >> str(')') ) }
   rule(:string_literal)  { ( str('"') >> match['^"'].repeat(0) >> str('"') ) | ( str("'") >> match["^'"].repeat(0) >> str("'") )}
   rule(:char_code)       { str('#x') >> match['0-9a-fA-F'].repeat(1) }
-  rule(:char_class)      { str('[') >> str('^').maybe >> ( char | char_code | char_range | char_code_range ).repeat(1) >> str(']') }
+  rule(:char_class)      { str('[') >> str('^').maybe >> ( str(']').absent? >> char | char_code | char_range | char_code_range ).repeat(1) >> str(']') }
   rule(:char)            { match('[[:print:]]') }
   rule(:char_range)      { char >> str('-') >> char } # TODO: "excluding ']' from second char"
   rule(:char_code_range) { char_code >> str('-') >> char_code }
