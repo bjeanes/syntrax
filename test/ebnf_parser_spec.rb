@@ -90,7 +90,17 @@ describe EbnfParser do
   describe "difference" do; end
 
   # Item ::= Primary ( '?' | '*' | '+' )?
-  describe "item" do; end
+  describe "item" do
+    subject { parser.item }
+
+    specify { subject.must_parse "X?" }
+    specify { subject.must_parse "X*" }
+    specify { subject.must_parse "X+" }
+    specify { subject.must_parse "X" }
+    specify { subject.must_parse "(A | B)+" }
+    specify { subject.must_parse '"foo"?' }
+    specify { subject.must_parse "#x40+" }
+  end
 
   # Primary ::= NCName | StringLiteral | CharCode | CharClass | '(' Choice ')'
   describe "primary" do
