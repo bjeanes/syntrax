@@ -93,7 +93,19 @@ describe EbnfParser do
   describe "item" do; end
 
   # Primary ::= NCName | StringLiteral | CharCode | CharClass | '(' Choice ')'
-  describe "primary" do; end
+  describe "primary" do
+    subject { parser.primary }
+
+    specify { subject.must_parse "AbcDef" }
+    specify { subject.must_not_parse "Abc Def" }
+    specify { subject.must_not_parse "Abc|Def" }
+    specify { subject.must_parse '"Hi there"' }
+    specify { subject.must_parse '#x30' }
+    specify { skip; subject.must_parse '[x]' }
+    specify { subject.must_parse "(X)" }
+    specify { subject.must_parse "(X|Y)" }
+    specify { subject.must_parse "( X | Y )" }
+  end
 
   describe "string_literal" do
     subject { parser.string_literal }
