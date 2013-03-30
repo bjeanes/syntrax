@@ -34,16 +34,7 @@ describe EbnfParser do
     }
   end
 
-  # FIXME
-  describe "broken" do
-    # before { skip }
-
-    specify { parser.must_parse grammar }
-  end
-
-  describe "misc non-trivial rules" do
-    specify { parser.must_parse "X ::= Y ((R | S)+ T)" }
-  end
+  specify { parser.must_parse grammar }
 
   # Production ::= NCName '::=' ( Choice | Link )
   describe "production" do
