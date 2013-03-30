@@ -25,7 +25,6 @@ A self-describing example grammar of the W3C-style EBNF syntax;
 (Taken from http://railroad.my28msec.com/rr/ui)
 =end
 
-# TODO: whitespace (e.g. newlines between grammar entries)
 class EbnfParser < Parslet::Parser
   root(:grammar)
 
