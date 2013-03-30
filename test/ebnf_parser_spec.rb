@@ -147,7 +147,6 @@ describe EbnfParser do
 
   # Char ::= [http://www.w3.org/TR/xml#NT-Char]
   describe "char" do
-    before { skip }
     subject { parser.char }
 
     specify { subject.must_parse "x" }
