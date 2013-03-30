@@ -29,16 +29,16 @@ A self-describing example grammar of the W3C-style EBNF syntax;
 class EbnfParser < Parslet::Parser
   root(:grammar)
 
-  def padded
-    space.repeat(0) >> yield >> space.repeat(0)
+  def padded(with=space)
+    with.repeat(0) >> yield >> with.repeat(0)
   end
 
   def any_up_until(atom)
     ((any >> atom.absent?).repeat >> any).maybe
   end
 
-  rule(:grammar)         { whitespace.repeat(0) >> production.as(:production) >> (new_line.repeat >> production.as(:production)).repeat(0) }
-  rule(:production)      { padded { name.as(:rule) >> padded { str('::=') } >> ( choice.as(:or) | link ).as(:definition) } }
+  rule(:grammar)         { production.as(:production) >> (new_line.repeat >> production.as(:production)).repeat(0) }
+  rule(:production)      { padded(whitespace) { name.as(:rule) >> padded { str('::=') } >> ( choice.as(:or) | link ).as(:definition) } }
   rule(:name)            { match['A-Z'] >> match['a-zA-Z'].repeat }
   rule(:choice)          { seq_or_diff.as(:option) >> ( padded { str('|') } >> seq_or_diff.as(:option) ).repeat }
   rule(:seq_or_diff)     { ( item >> ( (padded { str('-') } >> item) | ( space.repeat(1) >> item ).repeat ).maybe ) }

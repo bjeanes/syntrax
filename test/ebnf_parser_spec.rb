@@ -36,7 +36,7 @@ describe EbnfParser do
 
   # FIXME
   describe "broken" do
-    before { skip }
+    # before { skip }
 
     specify { parser.must_parse grammar }
   end
