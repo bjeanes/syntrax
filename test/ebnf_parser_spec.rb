@@ -87,7 +87,13 @@ describe EbnfParser do
   end
 
   # SequenceOrDifference ::= (Item ( '-' Item | Item* ))?
-  describe "difference" do; end
+  describe "difference" do
+    subject { parser.seq_or_diff }
+
+    specify { subject.must_parse "X" }
+    specify { subject.must_parse "X-Y" }
+    specify { subject.must_parse "X - Y" }
+  end
 
   # Item ::= Primary ( '?' | '*' | '+' )?
   describe "item" do
