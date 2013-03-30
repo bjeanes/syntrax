@@ -33,7 +33,7 @@ class EbnfParser < Parslet::Parser
   end
 
   def any_up_until(atom)
-    ((any >> atom.absent?).repeat >> any).maybe
+    (atom.absent? >> any).repeat
   end
 
   rule(:grammar)         { production.as(:production) >> (new_line.repeat >> production.as(:production)).repeat(0) }
@@ -47,7 +47,7 @@ class EbnfParser < Parslet::Parser
   rule(:char_code)       { str('#x') >> match['0-9a-fA-F'].repeat(1) }
   rule(:char_class)      { str('[') >> str('^').maybe >> ( str(']').absent? >> char | char_code | char_range | char_code_range ).repeat(1) >> str(']') }
   rule(:char)            { match('[[:print:]]') }
-  rule(:char_range)      { char >> str('-') >> char } # TODO: "excluding ']' from second char"
+  rule(:char_range)      { char >> str('-') >> char }
   rule(:char_code_range) { char_code >> str('-') >> char_code }
   rule(:link)            { str('[') >> url >> str(']') }
   rule(:url)             { match['^\x5D:/?#'].repeat(1) >> str('://') >> match['^\x5D#'].repeat(1) >> ( str('#') >> name ).maybe }
