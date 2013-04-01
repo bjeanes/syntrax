@@ -2,10 +2,45 @@ GEM
   remote: https://rubygems.org/
   specs:
     blankslate (2.1.2.4)
+    capybara (2.0.3)
+      mime-types (>= 1.16)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      selenium-webdriver (~> 2.0)
+      xpath (~> 1.0.0)
+    childprocess (0.3.9)
+      ffi (~> 1.0, >= 1.0.11)
+    eventmachine (1.0.3)
+    faye-websocket (0.4.7)
+      eventmachine (>= 0.12.0)
+    ffi (1.6.0)
+    http_parser.rb (0.5.3)
+    mime-types (1.22)
     minitest (4.7.0)
+    multi_json (1.7.2)
+    nokogiri (1.5.9)
     parslet (1.5.0)
       blankslate (~> 2.0)
+    phantomjs (1.8.1.1)
+      poltergeist
+    poltergeist (1.1.0)
+      capybara (~> 2.0, >= 2.0.1)
+      faye-websocket (~> 0.4, >= 0.4.4)
+      http_parser.rb (~> 0.5.3)
+    rack (1.5.2)
+    rack-test (0.6.2)
+      rack (>= 1.0)
     rake (0.9.6)
+    rubyzip (0.9.9)
+    selenium-webdriver (2.31.0)
+      childprocess (>= 0.2.5)
+      multi_json (~> 1.0)
+      rubyzip
+      websocket (~> 1.0.4)
+    websocket (1.0.7)
+    xpath (1.0.0)
+      nokogiri (~> 1.3)
 
 PLATFORMS
   ruby
@@ -13,4 +48,5 @@ PLATFORMS
 DEPENDENCIES
   minitest
   parslet
+  phantomjs
   rake
