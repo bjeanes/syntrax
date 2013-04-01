@@ -12,4 +12,4 @@ Turn the following EBNF:
 
 Into:
 
-![Array](http://f.cl.ly/items/1k3P212o1X143R0I0U1s/Screenshot_4_1_13_1_14_AM.png)
+![Array](http://f.cl.ly/items/1x2Z1f0s0t2c350a2m2l/test.svg)
