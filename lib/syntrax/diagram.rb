@@ -41,12 +41,16 @@ module Diagram
     #
     # [
     #   "(",
-    #   :item,
     #   {
-    #     zero_or_more: [
-    #       ",",
-    #       :item
-    #     ]
+    #     optional: [
+    #       :item,
+    #       {
+    #         zero_or_more: [
+    #           ",",
+    #           :item
+    #         ]
+    #       },
+    #     ],
     #   },
     #   ")"
     # ]
