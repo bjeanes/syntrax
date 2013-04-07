@@ -31,4 +31,19 @@ describe Transformer do
     rule = "Or ::= A | B | '123'"
     transform(rule).must_equal Set.new([:A, :B, '123'])
   end
+
+  specify do
+    rule = "Repeat ::= A?"
+    transform(rule).must_equal optional: [:A]
+  end
+
+  specify do
+    rule = "Repeat ::= A+"
+    transform(rule).must_equal one_or_more: [:A]
+  end
+
+  specify do
+    rule = "Repeat ::= A*"
+    transform(rule).must_equal zero_or_more: [:A]
+  end
 end

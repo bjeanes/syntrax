@@ -41,7 +41,7 @@ class EbnfParser < Parslet::Parser
   rule(:name)            { match['A-Z'] >> match['a-zA-Z'].repeat }
   rule(:choice)          { seq_or_diff.as(:option) >> ( padded { str('|') } >> seq_or_diff.as(:option) ).repeat }
   rule(:seq_or_diff)     { ( item >> ( (padded { str('-') } >> item) | ( space.repeat(1) >> item ).repeat ).maybe ) }
-  rule(:item)            { primary.as(:primary) >> match['+*?'].maybe }
+  rule(:item)            { primary.as(:primary) >> match['+*?'].as(:how_many).maybe }
   rule(:primary)         { name.as(:name) | string_literal | char_code | char_class | ( str('(') >> padded { choice } >> str(')') ) }
   rule(:string_literal)  {
     ( str('"') >> (match['^"'].repeat(0)).as(:string) >> str('"') ) |
