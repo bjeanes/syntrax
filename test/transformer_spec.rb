@@ -3,6 +3,7 @@ Bundler.setup(:default, :test)
 
 require 'minitest/autorun'
 
+require_relative "../lib/syntrax/ebnf_parser"
 require_relative "../lib/syntrax/transformer"
 
 describe Transformer do
@@ -24,5 +25,10 @@ describe Transformer do
   specify do
     rule = "Str ::= '\"' 'str' '\"'"
     transform(rule).must_equal ['"', 'str', '"']
+  end
+
+  specify do
+    rule = "Or ::= A | B | '123'"
+    transform(rule).must_equal Set.new([:A, :B, '123'])
   end
 end

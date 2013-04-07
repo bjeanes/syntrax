@@ -39,7 +39,7 @@ class EbnfParser < Parslet::Parser
   rule(:grammar)         { production.as(:production) >> (new_line.repeat >> production.as(:production)).repeat(0) }
   rule(:production)      { padded(whitespace) { name.as(:name) >> padded { str('::=') } >> ( choice | link ).as(:definition) } }
   rule(:name)            { match['A-Z'] >> match['a-zA-Z'].repeat }
-  rule(:choice)          { seq_or_diff >> ( padded { str('|') } >> seq_or_diff ).repeat }
+  rule(:choice)          { seq_or_diff.as(:option) >> ( padded { str('|') } >> seq_or_diff.as(:option) ).repeat }
   rule(:seq_or_diff)     { ( item >> ( (padded { str('-') } >> item) | ( space.repeat(1) >> item ).repeat ).maybe ) }
   rule(:item)            { primary.as(:primary) >> match['+*?'].maybe }
   rule(:primary)         { name.as(:name) | string_literal | char_code | char_class | ( str('(') >> padded { choice } >> str(')') ) }
