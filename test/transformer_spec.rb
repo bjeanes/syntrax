@@ -46,4 +46,15 @@ describe Transformer do
     rule = "Repeat ::= A*"
     transform(rule).must_equal zero_or_more: [:A]
   end
+
+  specify do
+    rule = "List ::= '(' (Number | String | List | Map | Vector)* ')'"
+    transform(rule).must_equal [
+      "(",
+      {
+        zero_or_more: Set.new([:Number, :String, :List, :Map, :Vector])
+      },
+      ")"
+    ]
+  end
 end
