@@ -2,20 +2,27 @@ require 'parslet'
 require 'set'
 
 class Transformer < Parslet::Transform
+  cardinality = {
+    '?' => :optional,
+    '+' => :one_or_more,
+    '*' => :zero_or_more
+  }
+
+  wrap = lambda { |x| Enumerable === x ? x : [x] }
+
+  rule(name: simple(:name), definition: subtree(:definition)) { wrap[definition] }
   rule(name: simple(:name)) { name.to_s.to_sym }
   rule(string: simple(:string)) { string.to_s }
-  rule(primary: simple(:primary)) { primary }
-  rule(primary: simple(:primary), how_many: '?') { {optional: [primary]} }
-  rule(primary: simple(:primary), how_many: '*') { {zero_or_more: [primary]} }
-  rule(primary: simple(:primary), how_many: '+') { {one_or_more: [primary]} }
-  rule(name: simple(:name), definition: {option: sequence(:definition)}) { definition }
-  rule(name: simple(:name), definition: {option: simple(:definition)}) { [definition] }
-  rule(name: simple(:name), definition: subtree(:options)) {
-    if Array === options
-      Set.new(options.map { |x| x[:option] })
+  rule(choice: {option: subtree(:option)}) { option }
+  rule(choice: subtree(:choices)) { Set.new(choices.map { |choice| choice[:option] }) }
+  rule(production: subtree(:production)) { production }
+  rule(primary: subtree(:primary)) { primary }
+  rule(primary: subtree(:primary), how_many: simple(:how_many)) {
+    value = wrap[primary]
+    if (key = cardinality[how_many.to_s])
+      {key => value}
     else
-      options[:option]
+      value
     end
   }
-  rule(production: subtree(:production)) { production }
 end
