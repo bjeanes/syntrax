@@ -10,7 +10,7 @@ class Transformer < Parslet::Transform
 
   wrap = lambda { |x| Enumerable === x ? x : [x] }
 
-  rule(name: simple(:name), definition: subtree(:definition)) { wrap[definition] }
+  rule(name: simple(:name), definition: subtree(:definition)) { {name.to_s.to_sym => wrap[definition]} }
   rule(name: simple(:name)) { name.to_s.to_sym }
   rule(string: simple(:string)) { string.to_s }
   rule(choice: {option: subtree(:option)}) { option }
@@ -23,6 +23,13 @@ class Transformer < Parslet::Transform
       {key => value}
     else
       value
+    end
+  }
+  rule(grammar: subtree(:grammar)) {
+    if grammar.is_a? Array
+      grammar.reduce(&:merge)
+    else
+      grammar
     end
   }
 end

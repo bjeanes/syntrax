@@ -36,7 +36,7 @@ class EbnfParser < Parslet::Parser
     (atom.absent? >> any).repeat
   end
 
-  rule(:grammar)         { production.as(:production) >> (new_line.repeat >> production.as(:production)).repeat(0) }
+  rule(:grammar)         { ( production.as(:production) >> (new_line.repeat >> production.as(:production)).repeat(0) ).as(:grammar) }
   rule(:production)      { padded(whitespace) { name.as(:name) >> padded { str('::=') } >> ( choice.as(:choice) | link ).as(:definition) } }
   rule(:name)            { match['A-Z'] >> match['a-zA-Z'].repeat }
   rule(:choice)          { seq_or_diff.as(:option) >> ( padded { str('|') } >> seq_or_diff.as(:option) ).repeat }
