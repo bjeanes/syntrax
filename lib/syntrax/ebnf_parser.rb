@@ -36,13 +36,13 @@ class EbnfParser < Parslet::Parser
     (atom.absent? >> any).repeat
   end
 
-  rule(:grammar)         { ( production.as(:production) >> (new_line.repeat >> production.as(:production)).repeat(0) ).as(:grammar) }
-  rule(:production)      { padded(whitespace) { name.as(:name) >> padded { str('::=') } >> ( choice.as(:choice) | link ).as(:definition) } }
-  rule(:name)            { match['A-Z'] >> match['a-zA-Z'].repeat }
-  rule(:choice)          { seq_or_diff.as(:option) >> ( padded { str('|') } >> seq_or_diff.as(:option) ).repeat }
+  rule(:grammar)         { (production >> (new_line.repeat >> production).repeat(0)).as(:grammar) }
+  rule(:production)      { padded(whitespace) { name >> padded { str('::=') } >> ( choice | link ).as(:definition) }.as(:production) }
+  rule(:name)            { (match['A-Z'] >> match['a-zA-Z'].repeat).as(:name) }
+  rule(:choice)          { (seq_or_diff.as(:option) >> ( padded { str('|') } >> seq_or_diff.as(:option) ).repeat).as(:choice) }
   rule(:seq_or_diff)     { ( item >> ( (padded { str('-') } >> item) | ( space.repeat(1) >> item ).repeat ).maybe ) }
   rule(:item)            { primary.as(:primary) >> match['+*?'].as(:how_many).maybe }
-  rule(:primary)         { name.as(:name) | string_literal | char_code | char_class | ( str('(') >> padded { choice.as(:choice) } >> str(')') ) }
+  rule(:primary)         { name | string_literal | char_code | char_class | ( str('(') >> padded { choice } >> str(')') ) }
   rule(:string_literal)  {
     ( str('"') >> (match['^"'].repeat(0)).as(:string) >> str('"') ) |
     ( str("'") >> (match["^'"].repeat(0)).as(:string) >> str("'") )}
