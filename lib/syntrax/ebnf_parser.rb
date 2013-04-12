@@ -36,8 +36,12 @@ class EbnfParser < Parslet::Parser
     block.call >> (separator >> block.call).repeat(*repeat)
   end
 
+  def except(exception, atom)
+    exception.absent? >> atom
+  end
+
   def any_up_until(atom)
-    (atom.absent? >> any).repeat
+    except(atom, any).repeat
   end
 
   rule(:grammar)         { join_with(new_line.repeat) { production }.as(:grammar) }
@@ -52,7 +56,7 @@ class EbnfParser < Parslet::Parser
     ( str("'") >> (match["^'"].repeat(0)).as(:string) >> str("'") )
   }
   rule(:char_code)       { str('#x') >> match['0-9a-fA-F'].repeat(1) }
-  rule(:char_class)      { str('[') >> str('^').maybe >> ( str(']').absent? >> char | char_code | char_range | char_code_range ).repeat(1) >> str(']') }
+  rule(:char_class)      { str('[') >> str('^').maybe >> ( except(str(']'), char) | char_code | char_range | char_code_range ).repeat(1) >> str(']') }
   rule(:char)            { match('[[:print:]]') }
   rule(:char_range)      { char >> str('-') >> char }
   rule(:char_code_range) { char_code >> str('-') >> char_code }
