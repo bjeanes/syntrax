@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require "syntrax/ebnf_parser"
+require "syntrax/transformer"
+require "syntrax/diagram"
+
+parsed = EbnfParser.new.parse(ARGF.read)
+transformed = Transformer.new.apply(parsed)
+
+transformed.each do |name, data|
+  puts "Generating diagram for '#{name}' rule"
+  File.open("#{name}.svg", "w") do |f|
+    f.write Diagram.render(data)
+  end
+end

@@ -12,14 +12,19 @@ module Diagram
     def render(data)
       script = Tempfile.new(['script', '.js'])
       script << %Q[
-        phantom.injectJs("#{RAILROAD_LIB}");
-        svg = Diagram(#{transform(data)});
-        svg.attrs.version = "1.1";
-        svg.attrs.xmlns = "http://www.w3.org/2000/svg";
-        console.log('<?xml version="1.0" standalone="no"?>');
-        console.log("<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>");
-        console.log(svg.toString());
-        phantom.exit();
+        try {
+            phantom.onError = function() { phantom.exit(1); };
+            phantom.injectJs("#{RAILROAD_LIB}");
+            svg = Diagram(#{transform(data)});
+            svg.attrs.version = "1.1";
+            svg.attrs.xmlns = "http://www.w3.org/2000/svg";
+            console.log('<?xml version="1.0" standalone="no"?>');
+            console.log("<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>");
+            console.log(svg.toString());
+            phantom.exit();
+        } catch(err) {
+            phantom.exit(1);
+        }
       ]
       script.close
       svg = Phantomjs.run(script.path)
@@ -58,7 +63,7 @@ module Diagram
       case data
       when Set    # choice
         data = data.map { |i| transform(i) }
-        "Choice(0, [#{data.join(', ')}]"
+        "Choice(0, #{data.join(', ')})"
       when Array  # sequence
         data = data.map { |i| transform(i) }
         "Sequence(#{data.join(', ')})"

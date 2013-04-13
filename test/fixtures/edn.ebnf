@@ -1,0 +1,2 @@
+Comment ::= ";" UTF8Char* NewLine
+NewLine ::= "\r\n" | "\n" | "\r"
